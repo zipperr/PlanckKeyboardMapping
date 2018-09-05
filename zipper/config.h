@@ -1,6 +1,10 @@
 #ifndef CONFIG_USER_H
 #define CONFIG_USER_H
 #define USB_MAX_POWER_CONSUMPTION 100
+#define MOUSEKEY_DELAY          100
+#define MOUSEKEY_INTERVAL        10
+#define MOUSEKEY_MAX_SPEED        4
+#define MOUSEKEY_TIME_TO_MAX      0
 #include "config_common.h"
 
 #ifdef AUDIO_ENABLE
@@ -12,7 +16,7 @@
                                   SONG(DVORAK_SOUND) \
                                 }
 #endif
-
+						
 /*
  * MIDI options
  */
