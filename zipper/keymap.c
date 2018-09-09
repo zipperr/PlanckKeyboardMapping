@@ -123,7 +123,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 [_JIS_LOWER] = LAYOUT_planck_grid(
     KC_EXLM, JP_AT,   KC_HASH, KC_DLR,  KC_PERC, JP_CIRC, JP_AMPR, JP_ASTR, JP_LPRN, JP_RPRN, JP_UNDS, JP_PLUS,
     _______, _______, _______, _______, _______, _______, _______, _______, JP_LCBR, JP_RCBR, JP_PIPE, JP_TILD,
-    _______, _______, _______, _______, _______, _______, _______, _______, JP_LBRC, JP_RBRC, JP_YEN,  JP_GRV,
+    _______, _______, _______, _______, _______, _______, _______, _______, JP_LBRC, JP_RBRC, JP_BSLS,  JP_GRV,
     _______, _______, _______, _______, _______, _______, _______, _______, KC_MUTE, KC_VOLD, KC_VOLU, KC_MPLY
 ),
 
@@ -149,18 +149,18 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * ,-----------------------------------------------------------------------------------.
  * |  F1  |  F2  |  F3  |  F4  |  F5  |  F6  |  F7  |  F8  |  F9  |  F10 |  F11 |  F12 |
  * |------+------+------+------+------+-------------+------+------+------+------+------|
- * |      |      |Musmod|Aud on|Audoff|AGnorm|AGswap|  US  | JIS  |      |      |      |
+ * |      |Insert|Musmod|Aud on|Audoff|AGnorm|AGswap|  US  | JIS  |Rctl  |Rshift|Ralt  |
  * |------+------+------+------+------+------|------+------+------+------+------+------|
- * |      |Voice-|Voice+|Mus on|Musoff|MIDIon|MIDIof|TERMon|TERMof|      |      |      |
+ * |      |Voice-|Voice+|Mus on|Musoff|MIDIon|MIDIof|TERMon|TERMof|Print |SclLc |Pause |
  * |------+------+------+------+------+------+------+------+------+------+------+------|
- * |      |      |      |      |      |             |      | HOME |Pg Dn |Pg Up | End  |
+ * |Reset |      |      |      |      |             |      | HOME |Pg Dn |Pg Up | End  |
  * `-----------------------------------------------------------------------------------'
  */
 [_ADJUST] = LAYOUT_planck_grid(
     KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,   KC_F6,   KC_F7,   KC_F8,     KC_F9,      KC_F10,  KC_F11,  KC_F12,
-    _______, _______, MU_MOD,  AU_ON,   AU_OFF,  AG_NORM, AG_SWAP, US_QWERTY, JIS_QWERTY, _______, _______, _______,
-    _______, MUV_DE,  MUV_IN,  MU_ON,   MU_OFF,  MI_ON,   MI_OFF,  TERM_ON,   TERM_OFF,   _______, _______, _______,
-    _______, _______, _______, _______, _______, _______, _______, _______,   KC_HOME,    KC_PGDN, KC_PGUP, KC_END
+    _______, KC_INS,  MU_MOD,  AU_ON,   AU_OFF,  AG_NORM, AG_SWAP, US_QWERTY, JIS_QWERTY, KC_RCTL, KC_RSFT, KC_RALT,
+    _______, MUV_DE,  MUV_IN,  MU_ON,   MU_OFF,  MI_ON,   MI_OFF,  TERM_ON,   TERM_OFF,   KC_PSCR, KC_SLCK, KC_PAUS,
+    RESET,   _______, _______, _______, _______, _______, _______, KC_INS,    KC_HOME,    KC_PGDN, KC_PGUP, KC_END
 ),
 
 /* MOUSE
