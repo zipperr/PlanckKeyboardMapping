@@ -17,7 +17,7 @@ make planck/rev6:zipper:dfu-util
 ## Remark
 ・US配列mac, US配列win, JIS配列mac, JIS配列winに対応  
 ・JIS配列で認識中はUS配列と同じキーを送信  
-・Lower, Raiseキー押下時、変換+かな、無変換_+英数も合わせて送信 
+・Lower, Raiseキー押下時、変換+かな、無変+英数も合わせて送信 
  
 ## 既知の不具合
 ・JISモード時の;:'"が長押しに対応しない  
