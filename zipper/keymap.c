@@ -215,35 +215,35 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             return false;
             break;
         case JIS_QUOT:
+            lshift = keyboard_report->mods & MOD_BIT(KC_LSFT);
             if (record->event.pressed) {
-                lshift = keyboard_report->mods & MOD_BIT(KC_LSFT);
                 register_code(KC_LSFT);
                 if (lshift) {
                     register_code(KC_LSFT);
                     register_code(KC_2);
-                    unregister_code(KC_2);
-                    unregister_code(KC_LSFT);
                 } else {
                     register_code(KC_LSFT);
                     register_code(KC_7);
-                    unregister_code(KC_7);
-                    unregister_code(KC_LSFT);
                 }
+            } else {
+                unregister_code(KC_2);
+                unregister_code(KC_7);
+                unregister_code(KC_LSFT);
             }
             return false;
             break;
         case JIS_SCLN:
+            lshift = keyboard_report->mods & MOD_BIT(KC_LSFT);
             if (record->event.pressed) {
-                lshift = keyboard_report->mods & MOD_BIT(KC_LSFT);
                 if (lshift) {
                     if (lshift) unregister_code(KC_LSFT);
                     register_code(KC_QUOT);
-                    unregister_code(KC_QUOT);
-                    if (lshift) register_code(KC_LSFT);
                 } else {
                     register_code(KC_SCLN);
-                    unregister_code(KC_SCLN);
                 }
+            } else {
+                unregister_code(KC_QUOT);
+                unregister_code(KC_SCLN);
             }
             return false;
             break;
