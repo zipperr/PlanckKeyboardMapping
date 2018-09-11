@@ -198,8 +198,12 @@ uint32_t layer_state_set_user(uint32_t state) {
     return state;
 }
 
+static bool is_shift_pressed = false;
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
-    static bool     lshift = false;
+    if (keycode == KC_LSFT || keycode == KC_RSFT) {
+        is_shift_pressed = record->event.pressed;
+        return true;
+    }
 
     switch (keycode) {
         case US_QWERTY:
@@ -215,35 +219,37 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             return false;
             break;
         case JIS_QUOT:
-            lshift = keyboard_report->mods & MOD_BIT(KC_LSFT);
-            if (record->event.pressed) {
-                register_code(KC_LSFT);
-                if (lshift) {
-                    register_code(KC_LSFT);
+            if (is_shift_pressed) {
+                if (record->event.pressed) {
                     register_code(KC_2);
                 } else {
-                    register_code(KC_LSFT);
-                    register_code(KC_7);
+                    unregister_code(KC_2);
                 }
             } else {
-                unregister_code(KC_2);
-                unregister_code(KC_7);
-                unregister_code(KC_LSFT);
+                if (record->event.pressed) {
+                    register_code(KC_LSFT);
+                    register_code(KC_7);
+                } else {
+                    unregister_code(KC_7);
+                    unregister_code(KC_LSFT);
+                }
             }
             return false;
             break;
         case JIS_SCLN:
-            lshift = keyboard_report->mods & MOD_BIT(KC_LSFT);
-            if (record->event.pressed) {
-                if (lshift) {
-                    if (lshift) unregister_code(KC_LSFT);
-                    register_code(KC_QUOT);
+            if (is_shift_pressed) {
+                if (record->event.pressed) {
+                    unregister_code(KC_LSFT);
+                    register_code(KC_QUOTE);
                 } else {
-                    register_code(KC_SCLN);
+                    unregister_code(KC_QUOTE);
                 }
             } else {
-                unregister_code(KC_QUOT);
-                unregister_code(KC_SCLN);
+                if (record->event.pressed) {
+                    register_code(KC_SCLN);
+                } else {
+                    unregister_code(KC_SCLN);
+                }
             }
             return false;
             break;
