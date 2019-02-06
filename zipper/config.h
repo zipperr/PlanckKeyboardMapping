@@ -17,6 +17,7 @@
 #define C4_AUDIO
 #define C5_AUDIO
 #define C6_AUDIO
+#define PREVENT_STUCK_MODIFIERS
 #include "config_common.h"
 
 #ifdef AUDIO_ENABLE
