@@ -42,8 +42,6 @@ enum user_macro {
 #define GUI_OFF MAGIC_NO_GUI
 #define NKRO_ON MAGIC_HOST_NKRO
 #define NKRO_OFF MAGIC_UNHOST_NKRO
-#define JIS_COLON 0x34
-#define JIS_SEMI_COLON 0x33
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 /* Qwerty
