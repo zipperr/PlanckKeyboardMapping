@@ -20,8 +20,7 @@ enum planck_keycodes {
   US_QWERTY = SAFE_RANGE,
   JIS_QWERTY,
   JIS_QUOT,
-  JIS_SCLN,
-  EEPROM
+  JIS_SCLN
 };
 
 enum user_macro {
@@ -43,6 +42,8 @@ enum user_macro {
 #define GUI_OFF MAGIC_NO_GUI
 #define NKRO_ON MAGIC_HOST_NKRO
 #define NKRO_OFF MAGIC_UNHOST_NKRO
+#define JIS_COLON 0x34
+#define JIS_SEMI_COLON 0x33
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 /* Qwerty
@@ -58,16 +59,16 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  */
  
 [_US_QWERTY] = LAYOUT_planck_grid(
-    KC_ESC,        KC_Q, KC_W,    KC_E,    KC_R,      KC_T,   KC_Y,   KC_U,      KC_I,    KC_O,    KC_P,     KC_BSPC,
-    CTL_TAB,       KC_A, KC_S,    KC_D,    KC_F,      KC_G,   KC_H,   KC_J,      KC_K,    KC_L,    KC_SCLN,  KC_ENT,
-    OSM(MOD_LSFT), KC_Z, KC_X,    KC_C,    KC_V,      KC_B,   KC_N,   KC_M,      KC_COMM, KC_DOT,  KC_SLSH,  KC_QUOT,
-    VOLD,          VOLU, KC_LALT, KC_LGUI, US_LOWER,  KC_SPC, KC_SPC, US_RAISE,  KC_LEFT, KC_DOWN, KC_UP,    KC_RGHT
+    KC_ESC,  KC_Q, KC_W,    KC_E,    KC_R,     KC_T,   KC_Y,   KC_U,     KC_I,    KC_O,    KC_P,    KC_BSPC,
+    CTL_TAB, KC_A, KC_S,    KC_D,    KC_F,     KC_G,   KC_H,   KC_J,     KC_K,    KC_L,    KC_SCLN, KC_ENT,
+    KC_LSFT, KC_Z, KC_X,    KC_C,    KC_V,     KC_B,   KC_N,   KC_M,     KC_COMM, KC_DOT,  KC_SLSH, KC_QUOT,
+    VOLD,    VOLU, KC_LALT, KC_LGUI, US_LOWER, KC_SPC, KC_SPC, US_RAISE, KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT
 ),
 [_JIS_QWERTY] = LAYOUT_planck_grid(
-    KC_ESC,        KC_Q, KC_W,    KC_E,    KC_R,      KC_T,   KC_Y,   KC_U,      KC_I,    KC_O,    KC_P,     KC_BSPC,
-    CTL_TAB,       KC_A, KC_S,    KC_D,    KC_F,      KC_G,   KC_H,   KC_J,      KC_K,    KC_L,    JIS_SCLN, KC_ENT,
-    OSM(MOD_LSFT), KC_Z, KC_X,    KC_C,    KC_V,      KC_B,   KC_N,   KC_M,      KC_COMM, KC_DOT,  KC_SLSH,  JIS_QUOT,
-    VOLD,          VOLU, KC_LALT, KC_LGUI, JIS_LOWER, KC_SPC, KC_SPC, JIS_RAISE, KC_LEFT, KC_DOWN, KC_UP,    KC_RGHT
+    KC_ESC,  KC_Q, KC_W,    KC_E,    KC_R,      KC_T,   KC_Y,   KC_U,      KC_I,    KC_O,    KC_P,     KC_BSPC,
+    CTL_TAB, KC_A, KC_S,    KC_D,    KC_F,      KC_G,   KC_H,   KC_J,      KC_K,    KC_L,    JIS_SCLN, KC_ENT,
+    KC_LSFT, KC_Z, KC_X,    KC_C,    KC_V,      KC_B,   KC_N,   KC_M,      KC_COMM, KC_DOT,  KC_SLSH,  JIS_QUOT,
+    VOLD,    VOLU, KC_LALT, KC_LGUI, JIS_LOWER, KC_SPC, KC_SPC, JIS_RAISE, KC_LEFT, KC_DOWN, KC_UP,    KC_RGHT
 ),
 
 /* Lower
@@ -207,6 +208,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                     register_code(KC_2);
                 } else {
                     unregister_code(KC_2);
+                    unregister_code(KC_7);
                 }
             } else {
                 if (record->event.pressed) {
@@ -215,6 +217,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                 } else {
                     unregister_code(KC_7);
                     unregister_code(KC_LSFT);
+                    unregister_code(KC_2);
                 }
             }
             return false;
@@ -227,18 +230,16 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                 } else {
                     unregister_code(KC_QUOTE);
                     register_code(KC_LSFT);
+                    unregister_code(KC_SCLN);
                 }
             } else {
                 if (record->event.pressed) {
                     register_code(KC_SCLN);
                 } else {
                     unregister_code(KC_SCLN);
+                    unregister_code(KC_QUOTE);
                 }
             }
-            return false;
-            break;
-        case EEPROM:
-            eeconfig_init();
             return false;
             break;
     }
