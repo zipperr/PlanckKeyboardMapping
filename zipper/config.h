@@ -20,4 +20,5 @@
     #define C6_AUDIO
     #define PREVENT_STUCK_MODIFIERS
     #define AUDIO_CLICKY
+    #define AUDIO_CLICKY_FREQ_RANDOMNESS 1.0f
 #endif
