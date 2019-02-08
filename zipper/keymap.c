@@ -24,8 +24,7 @@ enum user_macro {
   US_EMHL,
   US_KHKR,
   JIS_EMHL,
-  JIS_KHKR,
-  COPY_PASTE
+  JIS_KHKR
 };
 
 #define US_LOWER MACROTAP(US_EMHL)
@@ -126,7 +125,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  */
 [_ADJUST] = LAYOUT_planck_grid(
     KC_F1,      KC_F2,    KC_F3,   KC_F4,   KC_F5,   KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F11,  KC_F12,
-    US_QWERTY,  NKRO_TOG, KC_ACL2, KC_ACL1, KC_ACL0, _______, KC_MS_L, KC_MS_D, KC_MS_U, KC_MS_R, _______, _______,
+    US_QWERTY,  NKRO_TOG, _______, _______, _______, _______, KC_MS_L, KC_MS_D, KC_MS_U, KC_MS_R, _______, _______,
     JIS_QWERTY, _______,  _______, _______, _______, _______, _______, KC_BTN1, KC_BTN2, _______, _______, _______,
     RESET,      AU_TOG,   CK_TOGG, MU_TOG,  _______, _______, _______, _______, KC_HOME, KC_PGDN, KC_PGUP, KC_END
 )};
@@ -228,13 +227,6 @@ const macro_t *action_get_macro(keyrecord_t *record, uint8_t id, uint8_t opt){
             return MACRO_TAP_HOLD_LAYER( record, MACRO(T(MHEN), T(LANG2), END), _JIS_LOWER );
         case JIS_KHKR:
             return MACRO_TAP_HOLD_LAYER( record, MACRO(T(HENK), T(LANG1), END), _JIS_RAISE );
-        case COPY_PASTE:
-            if (record->event.pressed) {
-                return MACRO( D(LCTL), T(C), U(LCTL), END );
-            } else {
-                return MACRO( D(LCTL), T(V), U(LCTL), END );
-            }
-            break;
         };
     return MACRO_NONE;
 }
