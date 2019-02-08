@@ -1,8 +1,6 @@
-#include "planck.h"
-#include "action_layer.h"
-#include "muse.h"
+#include QMK_KEYBOARD_H
 #include "keymap_jp.h"
-
+#include "config_common.h"
 extern keymap_config_t keymap_config;
 
 enum planck_layers {
@@ -12,8 +10,7 @@ enum planck_layers {
   _JIS_QWERTY,
   _JIS_LOWER,
   _JIS_RAISE,
-  _ADJUST,
-  _MOUSE
+  _ADJUST
 };
 
 enum planck_keycodes {
@@ -27,21 +24,19 @@ enum user_macro {
   US_EMHL,
   US_KHKR,
   JIS_EMHL,
-  JIS_KHKR
+  JIS_KHKR,
+  COPY_PASTE
 };
 
 #define US_LOWER MACROTAP(US_EMHL)
 #define US_RAISE MACROTAP(US_KHKR)
 #define JIS_LOWER MACROTAP(JIS_EMHL)
 #define JIS_RAISE MACROTAP(JIS_KHKR)
-#define MOUSE MO(_MOUSE)
+#define COPA MACROTAP(COPY_PASTE)
+#define VOLD LALT(LSFT(KC_VOLD))
+#define VOLU LALT(LSFT(KC_VOLU))
+#define NKRO_TOG MAGIC_TOGGLE_NKRO
 #define CTL_TAB CTL_T(KC_TAB)
-#define VOLD LT(_MOUSE, KC_VOLD)
-#define VOLU CTL_T(KC_VOLU)
-#define GUI_ON MAGIC_UNNO_GUI
-#define GUI_OFF MAGIC_NO_GUI
-#define NKRO_ON MAGIC_HOST_NKRO
-#define NKRO_OFF MAGIC_UNHOST_NKRO
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 /* Qwerty
@@ -52,21 +47,21 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * |------+------+------+------+------+------|------+------+------+------+------+------|
  * | Shift|   Z  |   X  |   C  |   V  |   B  |   N  |   M  |   ,  |   .  |   /  | "    |
  * |------+------+------+------+------+------+------+------+------+------+------+------|
- * |MOUSE | Ctrl | Alt  | GUI  |Lower |             |Raise | Left | Down |  Up  |Right |
+ * | Mute | Ctrl | Alt  | GUI  |Lower |             |Raise | Left | Down |  Up  |Right |
  * `-----------------------------------------------------------------------------------'
  */
  
 [_US_QWERTY] = LAYOUT_planck_grid(
-    KC_ESC,  KC_Q, KC_W,    KC_E,    KC_R,     KC_T,   KC_Y,   KC_U,     KC_I,    KC_O,    KC_P,    KC_BSPC,
-    CTL_TAB, KC_A, KC_S,    KC_D,    KC_F,     KC_G,   KC_H,   KC_J,     KC_K,    KC_L,    KC_SCLN, KC_ENT,
-    KC_LSFT, KC_Z, KC_X,    KC_C,    KC_V,     KC_B,   KC_N,   KC_M,     KC_COMM, KC_DOT,  KC_SLSH, KC_QUOT,
-    VOLD,    VOLU, KC_LALT, KC_LGUI, US_LOWER, KC_SPC, KC_SPC, US_RAISE, KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT
+    KC_ESC,  KC_Q,     KC_W,    KC_E,    KC_R,     KC_T,   KC_Y,   KC_U,     KC_I,    KC_O,    KC_P,    KC_BSPC,
+    CTL_TAB, KC_A,     KC_S,    KC_D,    KC_F,     KC_G,   KC_H,   KC_J,     KC_K,    KC_L,    KC_SCLN, KC_ENT,
+    KC_LSFT, KC_Z,     KC_X,    KC_C,    KC_V,     KC_B,   KC_N,   KC_M,     KC_COMM, KC_DOT,  KC_SLSH, KC_QUOT,
+    KC_MUTE, KC_LCTRL, KC_LALT, KC_LGUI, US_LOWER, KC_SPC, KC_SPC, US_RAISE, KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT
 ),
 [_JIS_QWERTY] = LAYOUT_planck_grid(
-    KC_ESC,  KC_Q, KC_W,    KC_E,    KC_R,      KC_T,   KC_Y,   KC_U,      KC_I,    KC_O,    KC_P,     KC_BSPC,
-    CTL_TAB, KC_A, KC_S,    KC_D,    KC_F,      KC_G,   KC_H,   KC_J,      KC_K,    KC_L,    JIS_SCLN, KC_ENT,
-    KC_LSFT, KC_Z, KC_X,    KC_C,    KC_V,      KC_B,   KC_N,   KC_M,      KC_COMM, KC_DOT,  KC_SLSH,  JIS_QUOT,
-    VOLD,    VOLU, KC_LALT, KC_LGUI, JIS_LOWER, KC_SPC, KC_SPC, JIS_RAISE, KC_LEFT, KC_DOWN, KC_UP,    KC_RGHT
+    KC_ESC,  KC_Q,     KC_W,    KC_E,    KC_R,      KC_T,   KC_Y,   KC_U,      KC_I,    KC_O,    KC_P,     KC_BSPC,
+    CTL_TAB, KC_A,     KC_S,    KC_D,    KC_F,      KC_G,   KC_H,   KC_J,      KC_K,    KC_L,    JIS_SCLN, KC_ENT,
+    KC_LSFT, KC_Z,     KC_X,    KC_C,    KC_V,      KC_B,   KC_N,   KC_M,      KC_COMM, KC_DOT,  KC_SLSH,  JIS_QUOT,
+    KC_MUTE, KC_LCTRL, KC_LALT, KC_LGUI, JIS_LOWER, KC_SPC, KC_SPC, JIS_RAISE, KC_LEFT, KC_DOWN, KC_UP,    KC_RGHT
 ),
 
 /* Lower
@@ -77,7 +72,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * |------+------+------+------+------+------|------+------+------+------+------+------|
  * |      |      |      |      |      |      |      |      |      |      |      |   |  |
  * |------+------+------+------+------+------+------+------+------+------+------+------|
- * |      |      |      |      |      |             |      | Next | Vol- | Vol+ | Play |
+ * |      |      |      |      |      |             |      | Mute | Vol- | Vol+ | Play |
  * `-----------------------------------------------------------------------------------'
  */
 
@@ -85,13 +80,13 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     KC_TILD, KC_EXLM, KC_AT,   KC_HASH, KC_DLR,  KC_PERC, KC_CIRC, KC_AMPR, KC_ASTR, KC_LPRN, KC_RPRN, _______,
     _______, _______, _______, _______, _______, _______, _______, KC_UNDS, KC_PLUS, KC_LCBR, KC_RCBR, _______,
     _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, KC_PIPE,
-    _______, _______, _______, _______, _______, _______, _______, _______, KC_MUTE, KC_VOLD, KC_VOLU, KC_MPLY
+    _______, _______, _______, _______, _______, _______, _______, _______, KC_MUTE, VOLD,    VOLU,    KC_MPLY
 ),
 [_JIS_LOWER] = LAYOUT_planck_grid(
     JP_TILD, KC_EXLM, JP_AT,   KC_HASH, KC_DLR,  KC_PERC, JP_CIRC, JP_AMPR, JP_ASTR, JP_LPRN, JP_RPRN, _______,
     _______, _______, _______, _______, _______, _______, _______, JP_UNDS, JP_PLUS, JP_LCBR, JP_RCBR, _______,
     _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, JP_PIPE,
-    _______, _______, _______, _______, _______, _______, _______, _______, KC_MUTE, KC_VOLD, KC_VOLU, KC_MPLY
+    _______, _______, _______, _______, _______, _______, _______, _______, KC_MUTE, VOLD,    VOLU,    KC_MPLY
 ),
 
 /* Raise
@@ -109,51 +104,32 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     KC_GRV,  KC_1,    KC_2,    KC_3,    KC_4,    KC_5,    KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    _______,
     _______, _______, _______, _______, _______, _______, _______, KC_MINS, KC_EQL,  KC_LBRC, KC_RBRC, _______,
     _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, KC_BSLS,
-    _______, _______, _______, _______, _______, _______, _______, _______, KC_MUTE, KC_VOLD, KC_VOLU, KC_MPLY
+    _______, _______, _______, _______, _______, _______, _______, _______, KC_MUTE, VOLD,    VOLU,    KC_MPLY
 ),
 [_JIS_RAISE] = LAYOUT_planck_grid(
-    _______, KC_1,    KC_2,    KC_3,    KC_4,    KC_5,    KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    _______,
+    KC_GRV,  KC_1,    KC_2,    KC_3,    KC_4,    KC_5,    KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    _______,
     _______, _______, _______, _______, _______, _______, _______, KC_MINS, JP_EQL,  JP_LBRC, JP_RBRC, _______,
     _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, JP_YEN,
-    _______, _______, _______, _______, _______, _______, _______, _______, KC_MUTE, KC_VOLD, KC_VOLU, KC_MPLY
+    _______, _______, _______, _______, _______, _______, _______, _______, KC_MUTE, VOLD,    VOLU,    KC_MPLY
 ),
 
 /* Adjust (Lower + Raise)
  * ,-----------------------------------------------------------------------------------.
  * |  F1  |  F2  |  F3  |  F4  |  F5  |  F6  |  F7  |  F8  |  F9  |  F10 |  F11 |  F12 |
  * |------+------+------+------+------+-------------+------+------+------+------+------|
- * |AGS on|TERMon|Aud on|MIDIon|Mus on|NKROon|GUIon | US   |      |      |      |      |
+ * | US   | NKRO |      |      |      |      | Left | Down |  Up  |Right |      |      |
  * |------+------+------+------+------+------|------+------+------+------+------+------|
- * |AGSoff|TERMof|Audoff|MIDIof|Musoff|NKROof|GUIoff| JIS  |      |      |      |      |
+ * | JIS  |      |      |      |      |      |      |LClick|RClick|      |      |      |
  * |------+------+------+------+------+------+------+------+------+------+------+------|
- * |Reset |      |      |MUcycl|      |             |      | HOME |Pg Dn |Pg Up | End  |
+ * |Reset |Audio |Click |Music |      |             |      | HOME |Pg Dn |Pg Up | End  |
  * `-----------------------------------------------------------------------------------'
  */
 [_ADJUST] = LAYOUT_planck_grid(
-    KC_F1,   KC_F2,    KC_F3,   KC_F4,  KC_F5,   KC_F6,    KC_F7,   KC_F8,      KC_F9,   KC_F10,  KC_F11,  KC_F12,
-    AG_SWAP, TERM_ON,  AU_ON,   MI_ON,  MU_ON,   NKRO_ON,  GUI_ON,  US_QWERTY,  _______, _______, _______, _______,
-    AG_NORM, TERM_OFF, AU_OFF,  MI_OFF, MU_OFF,  NKRO_OFF, GUI_OFF, JIS_QWERTY, _______, _______, _______, _______,
-    RESET,   _______,  _______, MU_MOD, _______, _______,  _______, _______,    KC_HOME, KC_PGDN, KC_PGUP, KC_END
-),
-
-/* MOUSE
- * ,-----------------------------------------------------------------------------------.
- * |      |      |      |      |      |      |      | Btn1 | Btn2 |      |      |      |
- * |------+------+------+------+------+-------------+------+------+------+------+------|
- * |      |      | ACL2 | ACL1 | ACL0 |      |  ←  |  ↓  |  ↑  |  →  |      |      |
- * |------+------+------+------+------+------|------+------+------+------+------+------|
- * |      |      |      |      |      |      |      | WhUP | WhDN |      |      |      |
- * |------+------+------+------+------+------+------+------+------+------+------+------|
- * |      |      |      |      |      |             |      | Mute | Vol- | Vol+ | Play |
- * `-----------------------------------------------------------------------------------'
- */
-[_MOUSE] = LAYOUT_planck_grid(
-    _______, _______, _______, _______, _______, _______, _______, KC_BTN1, KC_BTN2, _______, _______, _______,
-    _______, _______, KC_ACL2, KC_ACL1, KC_ACL0, _______, KC_MS_L, KC_MS_D, KC_MS_U, KC_MS_R, _______, _______,
-    _______, _______, _______, _______, _______, _______, _______, KC_WH_D, KC_WH_U, _______, _______, _______,
-    US_QWERTY, _______, _______, _______, _______, _______, _______, _______, KC_MUTE, KC_VOLD, KC_VOLU, KC_MPLY
-)
-};
+    KC_F1,      KC_F2,    KC_F3,   KC_F4,   KC_F5,   KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F11,  KC_F12,
+    US_QWERTY,  NKRO_TOG, KC_ACL2, KC_ACL1, KC_ACL0, _______, KC_MS_L, KC_MS_D, KC_MS_U, KC_MS_R, _______, _______,
+    JIS_QWERTY, _______,  _______, _______, _______, _______, _______, KC_BTN1, KC_BTN2, _______, _______, _______,
+    RESET,      AU_TOG,   CK_TOGG, MU_TOG,  _______, _______, _______, _______, KC_HOME, KC_PGDN, KC_PGUP, KC_END
+)};
 
 uint32_t layer_state_set_user(uint32_t state) {
     switch (biton32(default_layer_state)) {
@@ -168,10 +144,8 @@ uint32_t layer_state_set_user(uint32_t state) {
 }
 
 #ifdef AUDIO_ENABLE
-float tone_startup[][2] = SONG(STARTUP_SOUND);
-float tone_qwerty[][2]  = SONG(QWERTY_SOUND);
-float music_scale[][2]  = SONG(MUSIC_SCALE_SOUND);
-float tone_goodbye[][2] = SONG(GOODBYE_SOUND);
+float tone_guitar[][2] = SONG(GUITAR_SOUND);
+float tone_violin[][2] = SONG(VIOLIN_SOUND);
 #endif
 
 static bool is_shift_pressed = false;
@@ -185,7 +159,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         case US_QWERTY:
             if (record->event.pressed) {
                 #ifdef AUDIO_ENABLE
-                    PLAY_SONG(tone_qwerty);
+                    PLAY_SONG(tone_guitar);
                 #endif
                 set_single_persistent_default_layer(_US_QWERTY);
             }
@@ -194,7 +168,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         case JIS_QWERTY:
             if (record->event.pressed) {
                 #ifdef AUDIO_ENABLE
-                    PLAY_SONG(tone_qwerty);
+                    PLAY_SONG(tone_violin);
                 #endif
                 set_single_persistent_default_layer(_JIS_QWERTY);
             }
@@ -254,65 +228,13 @@ const macro_t *action_get_macro(keyrecord_t *record, uint8_t id, uint8_t opt){
             return MACRO_TAP_HOLD_LAYER( record, MACRO(T(MHEN), T(LANG2), END), _JIS_LOWER );
         case JIS_KHKR:
             return MACRO_TAP_HOLD_LAYER( record, MACRO(T(HENK), T(LANG1), END), _JIS_RAISE );
+        case COPY_PASTE:
+            if (record->event.pressed) {
+                return MACRO( D(LCTL), T(C), U(LCTL), END );
+            } else {
+                return MACRO( D(LCTL), T(V), U(LCTL), END );
+            }
+            break;
         };
-        return MACRO_NONE;
+    return MACRO_NONE;
 }
-
-bool muse_mode = false;
-uint8_t last_muse_note = 0;
-uint16_t muse_counter = 0;
-uint8_t muse_offset = 70;
-uint16_t muse_tempo = 50;
-
-void matrix_scan_user(void) {
-  #ifdef AUDIO_ENABLE
-    if (muse_mode) {
-      if (muse_counter == 0) {
-        uint8_t muse_note = muse_offset + SCALE[muse_clock_pulse()];
-        if (muse_note != last_muse_note) {
-          stop_note(compute_freq_for_midi_note(last_muse_note));
-          play_note(compute_freq_for_midi_note(muse_note), 0xF);
-          last_muse_note = muse_note;
-        }
-      }
-      muse_counter = (muse_counter + 1) % muse_tempo;
-    }
-  #endif
-}
-
-bool music_mask_user(uint16_t keycode) {
-  switch (keycode) {
-    case US_RAISE:
-    case US_LOWER:
-    case JIS_RAISE:
-    case JIS_LOWER:
-      return false;
-    default:
-      return true;
-  }
-}
-
-#ifdef AUDIO_ENABLE
-    void startup_user()
-    {
-        wait_ms(20);
-        PLAY_SONG(tone_startup);
-    }
-
-    void shutdown_user()
-    {
-        PLAY_SONG(tone_goodbye);
-        wait_ms(150);
-        stop_all_notes();
-    }
-
-    void music_on_user(void)
-    {
-        music_scale_user();
-    }
-
-    void music_scale_user(void)
-    {
-        PLAY_SONG(music_scale);
-    }
-#endif
