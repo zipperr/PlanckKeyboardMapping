@@ -8,7 +8,7 @@
     #define MOUSEKEY_MAX_SPEED         3
     #define MOUSEKEY_MOVE_DELTA        5
     #define MOUSEKEY_DELAY             0
-    #define MOUSEKEY_WHEEL_MAX_SPEED   4
+    #define MOUSEKEY_WHEEL_MAX_SPEED   1
     #define MOUSEKEY_WHEEL_TIME_TO_MAX 100
     #define ENCODER_RESOLUTION         4
     #define MIDI_BASIC

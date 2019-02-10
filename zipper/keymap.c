@@ -15,22 +15,15 @@ enum planck_layers {
 
 enum planck_keycodes {
   US_QWERTY = SAFE_RANGE,
+  US_LOWER,
+  US_RAISE,
   JIS_QWERTY,
+  JIS_LOWER,
+  JIS_RAISE,
   JIS_QUOT,
   JIS_SCLN
 };
 
-enum user_macro {
-  US_EMHL,
-  US_KHKR,
-  JIS_EMHL,
-  JIS_KHKR
-};
-
-#define US_LOWER MACROTAP(US_EMHL)
-#define US_RAISE MACROTAP(US_KHKR)
-#define JIS_LOWER MACROTAP(JIS_EMHL)
-#define JIS_RAISE MACROTAP(JIS_KHKR)
 #define ADJUST MO(_ADJUST)
 #define VOLD LALT(LSFT(KC_VOLD))
 #define VOLU LALT(LSFT(KC_VOLU))
@@ -154,6 +147,10 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             break;
         case US_LOWER:
             if (record->event.pressed) {
+                register_code(JP_MHEN);
+                unregister_code(JP_MHEN);
+                register_code(KC_LANG2);
+                unregister_code(KC_LANG2);
                 layer_on(_US_LOWER);
                 update_tri_layer(_US_LOWER, _US_RAISE, _ADJUST);
             } else {
@@ -164,6 +161,10 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             break;
         case US_RAISE:
             if (record->event.pressed) {
+                register_code(JP_HENK);
+                unregister_code(JP_HENK);
+                register_code(KC_LANG1);
+                unregister_code(KC_LANG1);
                 layer_on(_US_RAISE);
                 update_tri_layer(_US_LOWER, _US_RAISE, _ADJUST);
             } else {
@@ -183,6 +184,10 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             break;
         case JIS_LOWER:
             if (record->event.pressed) {
+                register_code(JP_MHEN);
+                unregister_code(JP_MHEN);
+                register_code(KC_LANG2);
+                unregister_code(KC_LANG2);
                 layer_on(_JIS_LOWER);
                 update_tri_layer(_JIS_LOWER, _JIS_RAISE, _ADJUST);
             } else {
@@ -193,6 +198,10 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             break;
         case JIS_RAISE:
             if (record->event.pressed) {
+                register_code(JP_HENK);
+                unregister_code(JP_HENK);
+                register_code(KC_LANG1);
+                unregister_code(KC_LANG1);
                 layer_on(_JIS_RAISE);
                 update_tri_layer(_JIS_LOWER, _JIS_RAISE, _ADJUST);
             } else {
@@ -233,18 +242,4 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             break;
     }
     return true;
-}
-
-const macro_t *action_get_macro(keyrecord_t *record, uint8_t id, uint8_t opt){
-    switch(id) {
-        case US_EMHL:
-            return MACRO_TAP_HOLD_LAYER( record, MACRO(T(MHEN), T(LANG2), END), _US_LOWER );
-        case US_KHKR:
-            return MACRO_TAP_HOLD_LAYER( record, MACRO(T(HENK), T(LANG1), END), _US_RAISE );
-        case JIS_EMHL:
-            return MACRO_TAP_HOLD_LAYER( record, MACRO(T(MHEN), T(LANG2), END), _JIS_LOWER );
-        case JIS_KHKR:
-            return MACRO_TAP_HOLD_LAYER( record, MACRO(T(HENK), T(LANG1), END), _JIS_RAISE );
-        };
-    return MACRO_NONE;
 }
