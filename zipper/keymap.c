@@ -31,7 +31,7 @@ enum user_macro {
 #define US_RAISE MACROTAP(US_KHKR)
 #define JIS_LOWER MACROTAP(JIS_EMHL)
 #define JIS_RAISE MACROTAP(JIS_KHKR)
-#define COPA MACROTAP(COPY_PASTE)
+#define ADJUST MO(_ADJUST)
 #define VOLD LALT(LSFT(KC_VOLD))
 #define VOLU LALT(LSFT(KC_VOLU))
 #define NKRO_TOG MAGIC_TOGGLE_NKRO
@@ -46,7 +46,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * |------+------+------+------+------+------|------+------+------+------+------+------|
  * | Shift|   Z  |   X  |   C  |   V  |   B  |   N  |   M  |   ,  |   .  |   /  | "    |
  * |------+------+------+------+------+------+------+------+------+------+------+------|
- * | Mute | Ctrl | Alt  | GUI  |Lower |             |Raise | Left | Down |  Up  |Right |
+ * |Adjust| Ctrl | Alt  | GUI  |Lower |             |Raise | Left | Down |  Up  |Right |
  * `-----------------------------------------------------------------------------------'
  */
  
@@ -54,13 +54,13 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     KC_ESC,  KC_Q,     KC_W,    KC_E,    KC_R,     KC_T,   KC_Y,   KC_U,     KC_I,    KC_O,    KC_P,    KC_BSPC,
     CTL_TAB, KC_A,     KC_S,    KC_D,    KC_F,     KC_G,   KC_H,   KC_J,     KC_K,    KC_L,    KC_SCLN, KC_ENT,
     KC_LSFT, KC_Z,     KC_X,    KC_C,    KC_V,     KC_B,   KC_N,   KC_M,     KC_COMM, KC_DOT,  KC_SLSH, KC_QUOT,
-    KC_MUTE, KC_LCTRL, KC_LALT, KC_LGUI, US_LOWER, KC_SPC, KC_SPC, US_RAISE, KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT
+    ADJUST,  KC_LCTRL, KC_LALT, KC_LGUI, US_LOWER, KC_SPC, KC_SPC, US_RAISE, KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT
 ),
 [_JIS_QWERTY] = LAYOUT_planck_grid(
     KC_ESC,  KC_Q,     KC_W,    KC_E,    KC_R,      KC_T,   KC_Y,   KC_U,      KC_I,    KC_O,    KC_P,     KC_BSPC,
     CTL_TAB, KC_A,     KC_S,    KC_D,    KC_F,      KC_G,   KC_H,   KC_J,      KC_K,    KC_L,    JIS_SCLN, KC_ENT,
     KC_LSFT, KC_Z,     KC_X,    KC_C,    KC_V,      KC_B,   KC_N,   KC_M,      KC_COMM, KC_DOT,  KC_SLSH,  JIS_QUOT,
-    KC_MUTE, KC_LCTRL, KC_LALT, KC_LGUI, JIS_LOWER, KC_SPC, KC_SPC, JIS_RAISE, KC_LEFT, KC_DOWN, KC_UP,    KC_RGHT
+    ADJUST,  KC_LCTRL, KC_LALT, KC_LGUI, JIS_LOWER, KC_SPC, KC_SPC, JIS_RAISE, KC_LEFT, KC_DOWN, KC_UP,    KC_RGHT
 ),
 
 /* Lower
@@ -112,7 +112,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     _______, _______, _______, _______, _______, _______, _______, _______, KC_MUTE, VOLD,    VOLU,    KC_MPLY
 ),
 
-/* Adjust (Lower + Raise)
+/* Adjust
  * ,-----------------------------------------------------------------------------------.
  * |  F1  |  F2  |  F3  |  F4  |  F5  |  F6  |  F7  |  F8  |  F9  |  F10 |  F11 |  F12 |
  * |------+------+------+------+------+-------------+------+------+------+------+------|
@@ -129,18 +129,6 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     JIS_QWERTY, _______,  _______, _______, _______, _______, KC_WH_D, KC_BTN1, KC_BTN2, KC_WH_U, _______, _______,
     RESET,      AU_TOG,   CK_TOGG, MU_TOG,  _______, _______, _______, _______, KC_HOME, KC_PGDN, KC_PGUP, KC_END
 )};
-
-uint32_t layer_state_set_user(uint32_t state) {
-    switch (biton32(default_layer_state)) {
-        case _US_QWERTY:
-            state = update_tri_layer_state(state, _US_LOWER, _US_RAISE, _ADJUST);
-            break;
-        case _JIS_QWERTY:
-            state = update_tri_layer_state(state, _JIS_LOWER, _JIS_RAISE, _ADJUST);
-            break;
-        }
-    return state;
-}
 
 #ifdef AUDIO_ENABLE
 float tone_guitar[][2] = SONG(GUITAR_SOUND);
@@ -164,12 +152,52 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             }
             return false;
             break;
+        case US_LOWER:
+            if (record->event.pressed) {
+                layer_on(_US_LOWER);
+                update_tri_layer(_US_LOWER, _US_RAISE, _ADJUST);
+            } else {
+                layer_off(_US_LOWER);
+                update_tri_layer(_US_LOWER, _US_RAISE, _ADJUST);
+            }
+            return false;
+            break;
+        case US_RAISE:
+            if (record->event.pressed) {
+                layer_on(_US_RAISE);
+                update_tri_layer(_US_LOWER, _US_RAISE, _ADJUST);
+            } else {
+                layer_off(_US_RAISE);
+                update_tri_layer(_US_LOWER, _US_RAISE, _ADJUST);
+            }
+            return false;
+            break;
         case JIS_QWERTY:
             if (record->event.pressed) {
                 #ifdef AUDIO_ENABLE
                     PLAY_SONG(tone_violin);
                 #endif
                 set_single_persistent_default_layer(_JIS_QWERTY);
+            }
+            return false;
+            break;
+        case JIS_LOWER:
+            if (record->event.pressed) {
+                layer_on(_JIS_LOWER);
+                update_tri_layer(_JIS_LOWER, _JIS_RAISE, _ADJUST);
+            } else {
+                layer_off(_JIS_LOWER);
+                update_tri_layer(_JIS_LOWER, _JIS_RAISE, _ADJUST);
+            }
+            return false;
+            break;
+        case JIS_RAISE:
+            if (record->event.pressed) {
+                layer_on(_JIS_RAISE);
+                update_tri_layer(_JIS_LOWER, _JIS_RAISE, _ADJUST);
+            } else {
+                layer_off(_JIS_RAISE);
+                update_tri_layer(_JIS_LOWER, _JIS_RAISE, _ADJUST);
             }
             return false;
             break;
