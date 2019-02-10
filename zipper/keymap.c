@@ -126,13 +126,9 @@ float tone_guitar[][2] = SONG(GUITAR_SOUND);
 float tone_violin[][2] = SONG(VIOLIN_SOUND);
 #endif
 
-uint16_t pressed_time;
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
-    static bool is_shift = false;
-    if (keycode == KC_LSFT || keycode == KC_RSFT) {
-        is_shift = record->event.pressed;
-        return true;
-    }
+    static uint16_t pressed_time;
+    static uint8_t is_shift;
 
     switch (keycode) {
         case US_QWERTY:
@@ -141,6 +137,15 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                     PLAY_SONG(tone_guitar);
                 #endif
                 set_single_persistent_default_layer(_US_QWERTY);
+            }
+            return false;
+            break;
+        case JIS_QWERTY:
+            if (record->event.pressed) {
+                #ifdef AUDIO_ENABLE
+                    PLAY_SONG(tone_violin);
+                #endif
+                set_single_persistent_default_layer(_JIS_QWERTY);
             }
             return false;
             break;
@@ -175,15 +180,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                     register_code(KC_LANG1);
                     unregister_code(KC_LANG1);
                 }
-            }
-            return false;
-            break;
-        case JIS_QWERTY:
-            if (record->event.pressed) {
-                #ifdef AUDIO_ENABLE
-                    PLAY_SONG(tone_violin);
-                #endif
-                set_single_persistent_default_layer(_JIS_QWERTY);
             }
             return false;
             break;
@@ -223,6 +219,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             break;
         case JIS_QUOT:
             if (record->event.pressed) {
+                is_shift = get_mods() & (MOD_BIT(KC_LSHIFT)|MOD_BIT(KC_RSHIFT));
                 if (is_shift) {
                     register_code(KC_LSFT);
                     register_code(KC_2);
@@ -238,6 +235,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             break;
         case JIS_SCLN:
             if (record->event.pressed) {
+                is_shift = get_mods() & (MOD_BIT(KC_LSHIFT)|MOD_BIT(KC_RSHIFT));
                 if (is_shift) {
                     unregister_code(KC_LSFT);
                     register_code(KC_SCLN);
