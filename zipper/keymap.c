@@ -42,7 +42,6 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * |Adjust| Ctrl | Alt  | GUI  |Lower |             |Raise | Left | Down |  Up  |Right |
  * `-----------------------------------------------------------------------------------'
  */
- 
 [_US_QWERTY] = LAYOUT_planck_grid(
     KC_ESC,  KC_Q,     KC_W,    KC_E,    KC_R,     KC_T,   KC_Y,   KC_U,     KC_I,    KC_O,    KC_P,    KC_BSPC,
     CTL_TAB, KC_A,     KC_S,    KC_D,    KC_F,     KC_G,   KC_H,   KC_J,     KC_K,    KC_L,    KC_SCLN, KC_ENT,
@@ -67,7 +66,6 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * |      |      |      |      |      |             |      | Mute | Vol- | Vol+ | Play |
  * `-----------------------------------------------------------------------------------'
  */
-
 [_US_LOWER] = LAYOUT_planck_grid(
     KC_TILD, KC_EXLM, KC_AT,   KC_HASH, KC_DLR,  KC_PERC, KC_CIRC, KC_AMPR, KC_ASTR, KC_LPRN, KC_RPRN, _______,
     _______, _______, _______, _______, _______, _______, _______, KC_UNDS, KC_PLUS, KC_LCBR, KC_RCBR, _______,
@@ -128,6 +126,7 @@ float tone_guitar[][2] = SONG(GUITAR_SOUND);
 float tone_violin[][2] = SONG(VIOLIN_SOUND);
 #endif
 
+uint16_t pressed_time;
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     static bool is_shift = false;
     if (keycode == KC_LSFT || keycode == KC_RSFT) {
@@ -147,29 +146,35 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             break;
         case US_LOWER:
             if (record->event.pressed) {
-                register_code(JP_MHEN);
-                unregister_code(JP_MHEN);
-                register_code(KC_LANG2);
-                unregister_code(KC_LANG2);
+                pressed_time = timer_read();
                 layer_on(_US_LOWER);
                 update_tri_layer(_US_LOWER, _US_RAISE, _ADJUST);
             } else {
                 layer_off(_US_LOWER);
                 update_tri_layer(_US_LOWER, _US_RAISE, _ADJUST);
+                if (timer_elapsed(pressed_time) < TAPPING_TERM) {
+                    register_code(JP_MHEN);
+                    unregister_code(JP_MHEN);
+                    register_code(KC_LANG2);
+                    unregister_code(KC_LANG2);
+                }
             }
             return false;
             break;
         case US_RAISE:
             if (record->event.pressed) {
-                register_code(JP_HENK);
-                unregister_code(JP_HENK);
-                register_code(KC_LANG1);
-                unregister_code(KC_LANG1);
+                pressed_time = timer_read();
                 layer_on(_US_RAISE);
                 update_tri_layer(_US_LOWER, _US_RAISE, _ADJUST);
             } else {
                 layer_off(_US_RAISE);
                 update_tri_layer(_US_LOWER, _US_RAISE, _ADJUST);
+                if (timer_elapsed(pressed_time) < TAPPING_TERM) {
+                    register_code(JP_HENK);
+                    unregister_code(JP_HENK);
+                    register_code(KC_LANG1);
+                    unregister_code(KC_LANG1);
+                }
             }
             return false;
             break;
@@ -184,29 +189,35 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             break;
         case JIS_LOWER:
             if (record->event.pressed) {
-                register_code(JP_MHEN);
-                unregister_code(JP_MHEN);
-                register_code(KC_LANG2);
-                unregister_code(KC_LANG2);
+                pressed_time = timer_read();
                 layer_on(_JIS_LOWER);
                 update_tri_layer(_JIS_LOWER, _JIS_RAISE, _ADJUST);
             } else {
                 layer_off(_JIS_LOWER);
                 update_tri_layer(_JIS_LOWER, _JIS_RAISE, _ADJUST);
+                if (timer_elapsed(pressed_time) < TAPPING_TERM) {
+                    register_code(JP_MHEN);
+                    unregister_code(JP_MHEN);
+                    register_code(KC_LANG2);
+                    unregister_code(KC_LANG2);
+                }
             }
             return false;
             break;
         case JIS_RAISE:
             if (record->event.pressed) {
-                register_code(JP_HENK);
-                unregister_code(JP_HENK);
-                register_code(KC_LANG1);
-                unregister_code(KC_LANG1);
+                pressed_time = timer_read();
                 layer_on(_JIS_RAISE);
                 update_tri_layer(_JIS_LOWER, _JIS_RAISE, _ADJUST);
             } else {
                 layer_off(_JIS_RAISE);
                 update_tri_layer(_JIS_LOWER, _JIS_RAISE, _ADJUST);
+                if (timer_elapsed(pressed_time) < TAPPING_TERM) {
+                    register_code(JP_HENK);
+                    unregister_code(JP_HENK);
+                    register_code(KC_LANG1);
+                    unregister_code(KC_LANG1);
+                }
             }
             return false;
             break;
