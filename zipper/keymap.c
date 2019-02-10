@@ -147,10 +147,10 @@ float tone_guitar[][2] = SONG(GUITAR_SOUND);
 float tone_violin[][2] = SONG(VIOLIN_SOUND);
 #endif
 
-static bool is_shift_pressed = false;
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+    static bool is_shift = false;
     if (keycode == KC_LSFT || keycode == KC_RSFT) {
-        is_shift_pressed = record->event.pressed;
+        is_shift = record->event.pressed;
         return true;
     }
 
@@ -174,42 +174,32 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             return false;
             break;
         case JIS_QUOT:
-            if (is_shift_pressed) {
-                if (record->event.pressed) {
+            if (record->event.pressed) {
+                if (is_shift) {
+                    register_code(KC_LSFT);
                     register_code(KC_2);
                 } else {
-                    unregister_code(KC_2);
-                    unregister_code(KC_7);
-                }
-            } else {
-                if (record->event.pressed) {
                     register_code(KC_LSFT);
                     register_code(KC_7);
-                } else {
-                    unregister_code(KC_7);
-                    unregister_code(KC_LSFT);
-                    unregister_code(KC_2);
                 }
+            } else {
+                    unregister_code(KC_2);
+                    unregister_code(KC_7);
             }
             return false;
             break;
         case JIS_SCLN:
-            if (is_shift_pressed) {
-                if (record->event.pressed) {
+            if (record->event.pressed) {
+                if (is_shift) {
                     unregister_code(KC_LSFT);
-                    register_code(KC_QUOTE);
-                } else {
-                    unregister_code(KC_QUOTE);
-                    register_code(KC_LSFT);
-                    unregister_code(KC_SCLN);
-                }
-            } else {
-                if (record->event.pressed) {
                     register_code(KC_SCLN);
                 } else {
-                    unregister_code(KC_SCLN);
-                    unregister_code(KC_QUOTE);
+                    unregister_code(KC_LSFT);
+                    register_code(KC_QUOT);
                 }
+            } else {
+                unregister_code(KC_SCLN);
+                unregister_code(KC_QUOT);
             }
             return false;
             break;
