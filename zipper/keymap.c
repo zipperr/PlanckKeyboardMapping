@@ -122,8 +122,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 )};
 
 #ifdef AUDIO_ENABLE
-float tone_guitar[][2] = SONG(GUITAR_SOUND);
-float tone_violin[][2] = SONG(VIOLIN_SOUND);
+    float tone_us_layer_on[][2] = SONG(ONE_UP_SOUND);
+    float tone_jis_layer_on[][2] = SONG(ONE_UP_SOUND);
 #endif
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
@@ -134,7 +134,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         case US_QWERTY:
             if (record->event.pressed) {
                 #ifdef AUDIO_ENABLE
-                    PLAY_SONG(tone_guitar);
+                    PLAY_SONG(tone_us_layer_on);
                 #endif
                 set_single_persistent_default_layer(_US_QWERTY);
             }
@@ -143,7 +143,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         case JIS_QWERTY:
             if (record->event.pressed) {
                 #ifdef AUDIO_ENABLE
-                    PLAY_SONG(tone_violin);
+                    PLAY_SONG(tone_jis_layer_on);
                 #endif
                 set_single_persistent_default_layer(_JIS_QWERTY);
             }

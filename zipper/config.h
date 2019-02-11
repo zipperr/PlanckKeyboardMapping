@@ -12,12 +12,6 @@
     #define MOUSEKEY_WHEEL_TIME_TO_MAX 100
     #define ENCODER_RESOLUTION         4
     #define MIDI_BASIC
-    #define B5_AUDIO
-    #define B6_AUDIO
-    #define B7_AUDIO
-    #define C4_AUDIO
-    #define C5_AUDIO
-    #define C6_AUDIO
     #define PREVENT_STUCK_MODIFIERS
     #define AUDIO_CLICKY
     #define AUDIO_CLICKY_FREQ_RANDOMNESS 1.0f
