@@ -233,6 +233,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             } else {
                 unregister_code(KC_2);
                 unregister_code(KC_7);
+                unregister_code(KC_LSFT);
             }
             return false;
             break;
