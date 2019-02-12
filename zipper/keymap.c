@@ -128,7 +128,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     static uint16_t pressed_time;
-    static uint8_t is_shift;
+    static bool is_shift = false;
+    if (keycode == KC_LSFT || keycode == KC_RSFT) {
+        is_shift = record->event.pressed;
+        return true;
+    }
 
     switch (keycode) {
         case US_QWERTY:
@@ -219,7 +223,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             break;
         case JIS_QUOT:
             if (record->event.pressed) {
-                is_shift = get_mods() & (MOD_BIT(KC_LSHIFT)|MOD_BIT(KC_RSHIFT));
                 if (is_shift) {
                     register_code(KC_LSFT);
                     register_code(KC_2);
@@ -228,14 +231,13 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                     register_code(KC_7);
                 }
             } else {
-                    unregister_code(KC_2);
-                    unregister_code(KC_7);
+                unregister_code(KC_2);
+                unregister_code(KC_7);
             }
             return false;
             break;
         case JIS_SCLN:
             if (record->event.pressed) {
-                is_shift = get_mods() & (MOD_BIT(KC_LSHIFT)|MOD_BIT(KC_RSHIFT));
                 if (is_shift) {
                     unregister_code(KC_LSFT);
                     register_code(KC_SCLN);

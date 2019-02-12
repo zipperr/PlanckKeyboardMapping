@@ -1,7 +1,7 @@
 #ifndef CONFIG_USER_H
     #define CONFIG_USER_H
     #define FORCE_NKRO
-    #define TAPPING_TERM               180
+    #define TAPPING_TERM               190
     #define USB_MAX_POWER_CONSUMPTION  100
     #define MOUSEKEY_INTERVAL          0
     #define MOUSEKEY_TIME_TO_MAX       150
