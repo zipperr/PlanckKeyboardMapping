@@ -8,6 +8,7 @@ enum planck_layers {
   _US_LOWER,
   _US_RAISE,
   _JIS_QWERTY,
+  _JIS_QWERTY_2,
   _JIS_LOWER,
   _JIS_RAISE,
   _ADJUST
@@ -18,6 +19,7 @@ enum planck_keycodes {
   US_LOWER,
   US_RAISE,
   JIS_QWERTY,
+  JIS_QWERTY2,
   JIS_LOWER,
   JIS_RAISE,
   JIS_QUOT,
@@ -37,7 +39,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * |------+------+------+------+------+-------------+------+------+------+------+------|
  * | Tab  |   A  |   S  |   D  |   F  |   G  |   H  |   J  |   K  |   L  |   ;  | Enter|
  * |------+------+------+------+------+------|------+------+------+------+------+------|
- * | Shift|   Z  |   X  |   C  |   V  |   B  |   N  |   M  |   ,  |   .  |   /  | "    |
+ * | Shift|   Z  |   X  |   C  |   V  |   B  |   N  |   M  |   ,  |   .  |   /  |   '  |
  * |------+------+------+------+------+------+------+------+------+------+------+------|
  * |Adjust| Ctrl | Alt  | GUI  |Lower |             |Raise | Left | Down |  Up  |Right |
  * `-----------------------------------------------------------------------------------'
@@ -53,6 +55,12 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     CTL_TAB, KC_A,     KC_S,    KC_D,    KC_F,      KC_G,   KC_H,   KC_J,      KC_K,    KC_L,    JIS_SCLN, KC_ENT,
     KC_LSFT, KC_Z,     KC_X,    KC_C,    KC_V,      KC_B,   KC_N,   KC_M,      KC_COMM, KC_DOT,  KC_SLSH,  JIS_QUOT,
     ADJUST,  KC_LCTRL, KC_LALT, KC_LGUI, JIS_LOWER, KC_SPC, KC_SPC, JIS_RAISE, KC_LEFT, KC_DOWN, KC_UP,    KC_RGHT
+),
+[_JIS_QWERTY_2] = LAYOUT_planck_grid(
+    KC_ESC,  KC_Q,     KC_W,    KC_E,    KC_R,      KC_T,   KC_Y,   KC_U,      KC_I,    KC_O,    KC_P,     KC_BSPC,
+    CTL_TAB, KC_A,     KC_S,    KC_D,    KC_F,      KC_G,   KC_H,   KC_J,      KC_K,    KC_L,    JIS_SCLN, KC_ENT,
+    KC_LSFT, KC_Z,     KC_X,    KC_C,    KC_V,      KC_B,   KC_N,   KC_M,      KC_COMM, KC_DOT,  KC_UP,    JIS_QUOT,
+    ADJUST,  KC_LCTRL, KC_LALT, KC_LGUI, JIS_LOWER, KC_SPC, KC_SPC, JIS_RAISE, KC_SLSH, KC_LEFT, KC_DOWN,  KC_RGHT
 ),
 
 /* Lower
@@ -115,10 +123,10 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * `-----------------------------------------------------------------------------------'
  */
 [_ADJUST] = LAYOUT_planck_grid(
-    KC_F1,      KC_F2,    KC_F3,   KC_F4,   KC_F5,   KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F11,  KC_F12,
-    US_QWERTY,  NKRO_TOG, _______, _______, _______, _______, KC_MS_L, KC_MS_D, KC_MS_U, KC_MS_R, _______, _______,
-    JIS_QWERTY, _______,  _______, _______, _______, _______, KC_WH_D, KC_BTN1, KC_BTN2, KC_WH_U, _______, _______,
-    RESET,      AU_TOG,   CK_TOGG, MU_TOG,  _______, _______, _______, _______, KC_HOME, KC_PGDN, KC_PGUP, KC_END
+    KC_F1,      KC_F2,       KC_F3,   KC_F4,   KC_F5,   KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F11,  KC_F12,
+    US_QWERTY,  NKRO_TOG,    _______, _______, _______, _______, KC_MS_L, KC_MS_D, KC_MS_U, KC_MS_R, _______, _______,
+    JIS_QWERTY, JIS_QWERTY2, _______, _______, _______, _______, KC_WH_D, KC_BTN1, KC_BTN2, KC_WH_U, _______, _______,
+    RESET,      AU_TOG,      CK_TOGG, MU_TOG,  _______, _______, _______, _______, KC_HOME, KC_PGDN, KC_PGUP, KC_END
 )};
 
 #ifdef AUDIO_ENABLE
@@ -150,6 +158,15 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                     PLAY_SONG(tone_jis_layer_on);
                 #endif
                 set_single_persistent_default_layer(_JIS_QWERTY);
+            }
+            return false;
+            break;
+        case JIS_QWERTY2:
+            if (record->event.pressed) {
+                #ifdef AUDIO_ENABLE
+                    PLAY_SONG(tone_jis_layer_on);
+                #endif
+                set_single_persistent_default_layer(_JIS_QWERTY_2);
             }
             return false;
             break;
@@ -226,6 +243,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                 if (is_shift) {
                     register_code(KC_LSFT);
                     register_code(KC_2);
+
                 } else {
                     register_code(KC_LSFT);
                     register_code(KC_7);
@@ -233,7 +251,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             } else {
                 unregister_code(KC_2);
                 unregister_code(KC_7);
-                unregister_code(KC_LSFT);
             }
             return false;
             break;
@@ -241,10 +258,9 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             if (record->event.pressed) {
                 if (is_shift) {
                     unregister_code(KC_LSFT);
-                    register_code(KC_SCLN);
-                } else {
-                    unregister_code(KC_LSFT);
                     register_code(KC_QUOT);
+                } else {
+                    register_code(KC_SCLN);
                 }
             } else {
                 unregister_code(KC_SCLN);
