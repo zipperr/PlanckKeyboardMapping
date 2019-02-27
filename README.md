@@ -9,6 +9,7 @@ brew install avr-gcc
 brew install dfu-programmer  
 brew install gcc-arm-none-eabi  
 brew install dfu-util  
+make git-submodule  
 make planck/rev6:zipper:dfu-util  
   
 ## Layout
