@@ -10,7 +10,6 @@ enum planck_layers {
   _JIS_QWERTY,
   _JIS_LOWER,
   _JIS_RAISE,
-  _IIDX,
   _ADJUST
 };
 
@@ -22,8 +21,7 @@ enum planck_keycodes {
   JIS_LOWER,
   JIS_RAISE,
   JIS_QUOT,
-  JIS_SCLN,
-  IIDX,
+  JIS_SCLN
 };
 
 #define ADJUST MO(_ADJUST)
@@ -55,24 +53,6 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     CTL_TAB, KC_A,     KC_S,    KC_D,    KC_F,      KC_G,   KC_H,   KC_J,      KC_K,    KC_L,    JIS_SCLN, KC_ENT,
     KC_LSFT, KC_Z,     KC_X,    KC_C,    KC_V,      KC_B,   KC_N,   KC_M,      KC_COMM, KC_DOT,  KC_SLSH,  JIS_QUOT,
     ADJUST,  KC_LCTRL, KC_LALT, KC_LGUI, JIS_LOWER, KC_SPC, KC_SPC, JIS_RAISE, KC_LEFT, KC_DOWN, KC_UP,    KC_RGHT
-),
-
-/* IIDX
- * ,-----------------------------------------------------------------------------------.
- * | ESC  |   Q  |   W  |   E  |   R  |   T  |   Y  |   U  |   I  |   O  |   P  | Bksp |
- * |------+------+------+------+------+-------------+------+------+------+------+------|
- * | Tab  |   A  |   S  |   D  |   F  |   G  |   H  |   J  |   K  |   L  |   ;  | Enter|
- * |------+------+------+------+------+------|------+------+------+------+------+------|
- * | Shift|   Z  |   X  |   C  |   V  |   B  |   N  |   M  |   ,  |   .  |   /  |   '  |
- * |------+------+------+------+------+------+------+------+------+------+------+------|
- * |Adjust| Ctrl | Alt  | GUI  |Lower |             |Raise | Left | Down |  Up  |Right |
- * `-----------------------------------------------------------------------------------'
- */
-[_IIDX] = LAYOUT_planck_grid(
-    KC_ESC,  KC_Q, KC_W, KC_E, KC_R, KC_T,   KC_Y,   KC_U, KC_I,    KC_O,    KC_P,    KC_BSPC,
-    CTL_TAB, KC_A, KC_S, KC_D, KC_F, KC_G,   KC_H,   KC_J, KC_K,    KC_L,    KC_SCLN, KC_ENT,
-    KC_LSFT, KC_Z, KC_X, KC_C, KC_V, KC_B,   KC_N,   KC_M, KC_COMM, KC_DOT,  KC_SLSH, KC_QUOT,
-    ADJUST,  KC_Q, KC_W, KC_E, KC_R, KC_SPC, KC_SPC, KC_U, KC_I,    KC_DOWN, KC_UP,   KC_RGHT
 ),
 
 /* Lower
@@ -129,7 +109,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * |------+------+------+------+------+-------------+------+------+------+------+------|
  * | US   |RClick|  Up  |LClick|      |      | Left | Down |  Up  |Right |      | NKRO |
  * |------+------+------+------+------+------|------+------+------+------+------+------|
- * | JIS  | Left | Down |  Up  |      |      | WhDN |LClick|RClick| WhUP |      | IIDX |
+ * | JIS  | Left | Down |  Up  |      |      | WhDN |LClick|RClick| WhUP |      |      |
  * |------+------+------+------+------+------+------+------+------+------+------+------|
  * |Reset |Audio |Click |Music |      |             |      | HOME |Pg Dn |Pg Up | End  |
  * `-----------------------------------------------------------------------------------'
@@ -137,7 +117,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 [_ADJUST] = LAYOUT_planck_grid(
     KC_F1,      KC_F2,   KC_F3,   KC_F4,   KC_F5,   KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F11,  KC_F12,
     US_QWERTY,  KC_BTN2, KC_MS_U, KC_BTN1, _______, _______, KC_MS_L, KC_MS_D, KC_MS_U, KC_MS_R, _______, NKRO_TOG,
-    JIS_QWERTY, KC_MS_L, KC_MS_D, KC_MS_R, _______, _______, KC_WH_D, KC_BTN1, KC_BTN2, KC_WH_U, _______, IIDX,
+    JIS_QWERTY, KC_MS_L, KC_MS_D, KC_MS_R, _______, _______, KC_WH_D, KC_BTN1, KC_BTN2, KC_WH_U, _______, _______,
     RESET,      AU_TOG,  CK_TOGG, MU_TOG,  _______, _______, _______, _______, KC_HOME, KC_PGDN, KC_PGUP, KC_END
 )};
 
@@ -169,23 +149,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                     PLAY_SONG(tone_layer_on);
                 #endif
                 set_single_persistent_default_layer(_JIS_QWERTY);
-            }
-            return false;
-            break;
-        case US_LOWER:
-            if (record->event.pressed) {
-                pressed_time = timer_read();
-                layer_on(_US_LOWER);
-                update_tri_layer(_US_LOWER, _US_RAISE, _ADJUST);
-            } else {
-                layer_off(_US_LOWER);
-                update_tri_layer(_US_LOWER, _US_RAISE, _ADJUST);
-                if (timer_elapsed(pressed_time) < TAPPING_TERM) {
-                    register_code(JP_MHEN);
-                    unregister_code(JP_MHEN);
-                    register_code(KC_LANG2);
-                    unregister_code(KC_LANG2);
-                }
             }
             return false;
             break;
