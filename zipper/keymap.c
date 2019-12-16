@@ -110,7 +110,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
      * |------+------+------+------+------+-------------+------+------+------+------+------|
      * | US   |RClick|  Up  |LClick|      |      | Left | Down |  Up  |Right |      | NKRO |
      * |------+------+------+------+------+------|------+------+------+------+------+------|
-     * | JIS  | Left | Down |  Up  |      |      | WhDN |LClick|RClick| WhUP |      |      |
+     * | JIS  | Left | Down |  Up  |      |      | WhDN |LClick|RClick| WhUP |      | MAIL |
      * |------+------+------+------+------+------+------+------+------+------+------+------|
      * |Reset |Audio |Click |Music |      |             |      | HOME |Pg Dn |Pg Up | End  |
      * `-----------------------------------------------------------------------------------'
@@ -236,7 +236,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             break;
         case MAIL:
             if (record->event.pressed) {
-                SEND_STRING("zipperr@i.softbank.jp")
+                SEND_STRING("zipperr@i.softbank.jp");
             }
             return false;
             break;
