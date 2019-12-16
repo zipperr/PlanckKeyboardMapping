@@ -21,7 +21,8 @@ enum planck_keycodes {
     JIS_LOWER,
     JIS_RAISE,
     JIS_QUOT,
-    JIS_SCLN
+    JIS_SCLN,
+    MAIL
 };
 
 #define ADJUST MO(_ADJUST)
@@ -117,7 +118,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [_ADJUST] = LAYOUT_planck_grid(
             KC_F1,      KC_F2,   KC_F3,   KC_F4,   KC_F5,   KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F11,  KC_F12,
             US_QWERTY,  KC_BTN2, KC_MS_U, KC_BTN1, _______, _______, KC_MS_L, KC_MS_D, KC_MS_U, KC_MS_R, _______, NKRO_TOG,
-            JIS_QWERTY, KC_MS_L, KC_MS_D, KC_MS_R, _______, _______, KC_WH_D, KC_BTN1, KC_BTN2, KC_WH_U, _______, _______,
+            JIS_QWERTY, KC_MS_L, KC_MS_D, KC_MS_R, _______, _______, KC_WH_D, KC_BTN1, KC_BTN2, KC_WH_U, _______, MAIL,
             RESET,      AU_TOG,  CK_TOGG, MU_TOG,  _______, _______, _______, _______, KC_HOME, KC_PGDN, KC_PGUP, KC_END
             )};
 
@@ -230,6 +231,12 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             } else {
                 unregister_code(KC_SCLN);
                 unregister_code(KC_QUOT);
+            }
+            return false;
+            break;
+        case MAIL:
+            if (record->event.pressed) {
+                SEND_STRING("zipperr@i.softbank.jp")
             }
             return false;
             break;
