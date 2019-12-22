@@ -22,7 +22,8 @@ enum planck_keycodes {
     JIS_RAISE,
     JIS_QUOT,
     JIS_SCLN,
-    MAIL
+    US_MAIL,
+    JIS_MAIL
 };
 
 #define ADJUST MO(_ADJUST)
@@ -86,7 +87,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
      * |------+------+------+------+------+-------------+------+------+------+------+------|
      * |      |      |      |      |      |      |      |   -  |   =  |   [  |   ]  |      |
      * |------+------+------+------+------+------|------+------+------+------+------+------|
-     * |      |      |      |      |      |      |      |      |      |      |      |   \  |
+     * | Mail |      |      |      |      |      |      |      |      |      |      |   \  |
      * |------+------+------+------+------+------+------+------+------+------+------+------|
      * |      |      |      |      |      |             |      | Mute | Vol- | Vol+ | Play |
      * `-----------------------------------------------------------------------------------'
@@ -94,14 +95,14 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [_US_RAISE] = LAYOUT_planck_grid(
             KC_GRV,  KC_1,    KC_2,    KC_3,    KC_4,    KC_5,    KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    _______,
             _______, _______, _______, _______, _______, _______, _______, KC_MINS, KC_EQL,  KC_LBRC, KC_RBRC, _______,
-            _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, KC_BSLS,
+            US_MAIL, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, KC_BSLS,
             _______, _______, _______, _______, _______, _______, _______, _______, KC_MUTE, VOLD,    VOLU,    KC_MPLY
             ),
     [_JIS_RAISE] = LAYOUT_planck_grid(
-            KC_GRV,  KC_1,    KC_2,    KC_3,    KC_4,    KC_5,    KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    _______,
-            _______, _______, _______, _______, _______, _______, _______, KC_MINS, JP_EQL,  JP_LBRC, JP_RBRC, _______,
-            _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, JP_YEN,
-            _______, _______, _______, _______, _______, _______, _______, _______, KC_MUTE, VOLD,    VOLU,    KC_MPLY
+            KC_GRV,   KC_1,    KC_2,    KC_3,    KC_4,    KC_5,    KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    _______,
+            _______,  _______, _______, _______, _______, _______, _______, KC_MINS, JP_EQL,  JP_LBRC, JP_RBRC, _______,
+            JIS_MAIL, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, JP_YEN,
+            _______,  _______, _______, _______, _______, _______, _______, _______, KC_MUTE, VOLD,    VOLU,    KC_MPLY
             ),
 
     /* Adjust
@@ -118,7 +119,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [_ADJUST] = LAYOUT_planck_grid(
             KC_F1,      KC_F2,   KC_F3,   KC_F4,   KC_F5,   KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F11,  KC_F12,
             US_QWERTY,  KC_BTN2, KC_MS_U, KC_BTN1, _______, _______, KC_MS_L, KC_MS_D, KC_MS_U, KC_MS_R, _______, NKRO_TOG,
-            JIS_QWERTY, KC_MS_L, KC_MS_D, KC_MS_R, _______, _______, KC_WH_D, KC_BTN1, KC_BTN2, KC_WH_U, _______, MAIL,
+            JIS_QWERTY, KC_MS_L, KC_MS_D, KC_MS_R, _______, _______, KC_WH_D, KC_BTN1, KC_BTN2, KC_WH_U, _______, _______,
             RESET,      AU_TOG,  CK_TOGG, MU_TOG,  _______, _______, _______, _______, KC_HOME, KC_PGDN, KC_PGUP, KC_END
             )};
 
@@ -150,6 +151,23 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                 PLAY_SONG(tone_layer_on);
 #endif
                 set_single_persistent_default_layer(_JIS_QWERTY);
+            }
+            return false;
+            break;
+        case US_LOWER:
+            if (record->event.pressed) {
+                pressed_time = timer_read();
+                layer_on(_US_LOWER);
+                update_tri_layer(_US_LOWER, _US_RAISE, _ADJUST);
+            } else {
+                layer_off(_US_LOWER);
+                update_tri_layer(_US_LOWER, _US_RAISE, _ADJUST);
+                if (timer_elapsed(pressed_time) < TAPPING_TERM) {
+                    register_code(JP_MHEN);
+                    unregister_code(JP_MHEN);
+                    register_code(KC_LANG2);
+                    unregister_code(KC_LANG2);
+                }
             }
             return false;
             break;
@@ -234,9 +252,15 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             }
             return false;
             break;
-        case MAIL:
+        case US_MAIL:
             if (record->event.pressed) {
-                SEND_STRING("zipperr@i.softbank.jp");
+                SEND_STRING("zipperr"SS_LSFT("2")"i.softbank.jp");
+            }
+            return false;
+            break;
+        case JIS_MAIL:
+            if (record->event.pressed) {
+                SEND_STRING("zipperr[i.softbank.jp");
             }
             return false;
             break;
