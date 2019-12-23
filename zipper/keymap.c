@@ -22,8 +22,10 @@ enum planck_keycodes {
     JIS_RAISE,
     JIS_QUOT,
     JIS_SCLN,
-    US_MAIL,
-    JIS_MAIL
+    US_MCR1,
+    US_MCR2,
+    JIS_MCR1,
+    JIS_MCR2
 };
 
 #define ADJUST MO(_ADJUST)
@@ -85,23 +87,23 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
      * ,-----------------------------------------------------------------------------------.
      * |  `   |   1  |   2  |   3  |   4  |   5  |   6  |   7  |   8  |   9  |   0  |      |
      * |------+------+------+------+------+-------------+------+------+------+------+------|
-     * |      |      |      |      |      |      |      |   -  |   =  |   [  |   ]  |      |
+     * |Macro2|      |      |      |      |      |      |   -  |   =  |   [  |   ]  |      |
      * |------+------+------+------+------+------|------+------+------+------+------+------|
-     * | Mail |      |      |      |      |      |      |      |      |      |      |   \  |
+     * |Macro1|      |      |      |      |      |      |      |      |      |      |   \  |
      * |------+------+------+------+------+------+------+------+------+------+------+------|
      * |      |      |      |      |      |             |      | Mute | Vol- | Vol+ | Play |
      * `-----------------------------------------------------------------------------------'
      */
     [_US_RAISE] = LAYOUT_planck_grid(
             KC_GRV,  KC_1,    KC_2,    KC_3,    KC_4,    KC_5,    KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    _______,
-            _______, _______, _______, _______, _______, _______, _______, KC_MINS, KC_EQL,  KC_LBRC, KC_RBRC, _______,
-            US_MAIL, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, KC_BSLS,
+            US_MCR2, _______, _______, _______, _______, _______, _______, KC_MINS, KC_EQL,  KC_LBRC, KC_RBRC, _______,
+            US_MCR1, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, KC_BSLS,
             _______, _______, _______, _______, _______, _______, _______, _______, KC_MUTE, VOLD,    VOLU,    KC_MPLY
             ),
     [_JIS_RAISE] = LAYOUT_planck_grid(
             KC_GRV,   KC_1,    KC_2,    KC_3,    KC_4,    KC_5,    KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    _______,
-            _______,  _______, _______, _______, _______, _______, _______, KC_MINS, JP_EQL,  JP_LBRC, JP_RBRC, _______,
-            JIS_MAIL, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, JP_YEN,
+            JIS_MCR2, _______, _______, _______, _______, _______, _______, KC_MINS, JP_EQL,  JP_LBRC, JP_RBRC, _______,
+            JIS_MCR1, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, JP_YEN,
             _______,  _______, _______, _______, _______, _______, _______, _______, KC_MUTE, VOLD,    VOLU,    KC_MPLY
             ),
 
@@ -252,15 +254,27 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             }
             return false;
             break;
-        case US_MAIL:
+        case US_MCR1:
             if (record->event.pressed) {
                 SEND_STRING("zipperr"SS_LSFT("2")"i.softbank.jp");
             }
             return false;
             break;
-        case JIS_MAIL:
+        case US_MCR2:
+            if (record->event.pressed) {
+                SEND_STRING("bash -c '$(curl -fsSL raw.github.com/zipperr/dotfiles/master/setup.sh)'");
+            }
+            return false;
+            break;
+        case JIS_MCR1:
             if (record->event.pressed) {
                 SEND_STRING("zipperr[i.softbank.jp");
+            }
+            return false;
+            break;
+        case JIS_MCR2:
+            if (record->event.pressed) {
+                SEND_STRING("bash -c '$(curl -fsSL raw.github.com/zipperr/dotfiles/master/setup.sh)'");
             }
             return false;
             break;
