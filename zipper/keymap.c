@@ -262,7 +262,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             break;
         case US_MCR2:
             if (record->event.pressed) {
-                SEND_STRING("bash -c '$(curl -fsSL raw.github.com/zipperr/dotfiles/master/setup.sh)'");
+                SEND_STRING("bash -c "SS_LSFT("'")"$(curl -fsSL bit.ly/zipperr)"SS_LSFT("'"));
             }
             return false;
             break;
@@ -274,7 +274,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             break;
         case JIS_MCR2:
             if (record->event.pressed) {
-                SEND_STRING("bash -c '$(curl -fsSL raw.github.com/zipperr/dotfiles/master/setup.sh)'");
+                SEND_STRING("bash -c "SS_LSFT("2")"$"SS_LSFT("8")"curl -fsSL bit.ly/zipperr"SS_LSFT("9")""SS_LSFT("2"));
             }
             return false;
             break;
